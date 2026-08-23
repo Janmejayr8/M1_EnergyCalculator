@@ -63,3 +63,26 @@ plt.ylabel("Predicted Energy Score")
 plt.title("Actual vs Predicted Energy Score")
 
 plt.show()
+
+# Get user input
+hours = float(input("Hours slept: "))
+quality = float(input("Sleep quality (1-10): "))
+exercise = float(input("Exercise hours: "))
+caffeine = float(input("Caffeine intake (cups): "))
+stress = float(input("Stress level (1-10): "))
+screen = float(input("Screen time (hours): "))
+
+# Create input for the model
+user_data = [[
+    hours,
+    quality,
+    exercise,
+    caffeine,
+    stress,
+    screen
+]]
+
+# Predict energy score
+user_prediction = model.predict(user_data)
+
+print(f"\nPredicted Energy Score: {user_prediction[0]:.2f}")
