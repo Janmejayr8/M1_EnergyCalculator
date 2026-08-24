@@ -1,10 +1,10 @@
 **Energy Calculator:**
 A machine learning model that predicts a person's daily energy score based on lifestyle habits — sleep, exercise, caffeine intake, stress, and screen time.
 
-**Overview**
+**Overview:**
 This project uses a linear regression model (scikit-learn) trained on lifestyle data to predict an energy_score output. The goal was to explore how everyday habits statistically relate to perceived energy levels, and to practice the full ML workflow: data generation, preprocessing, training, and evaluation.
 
-Features Used:
+**Features Used:**
 hours_slept
 sleep_quality
 exercise_hours
@@ -16,11 +16,11 @@ Python
 pandas
 scikit-learn
 
-Results
+**Results**
 R² Score: 0.95
 Evaluated using an 80/20 train-test split with Mean Squared Error and R² as metrics
 
-Project Structure:
+**Project Structure:**
 ├── generate_data.py         # Generates the synthetic dataset
 ├── sleep_energy_data.csv    # Dataset used for training/testing
 ├── sleep_energy_model.py    # Trains and evaluates the regression model
