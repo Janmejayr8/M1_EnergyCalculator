@@ -1,5 +1,6 @@
 import pandas as pd
 
+from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
@@ -34,12 +35,18 @@ X_train, X_test, y_train, y_test = train_test_split(
     random_state=42
 )
 
+scaler = StandardScaler()
+
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
 
 # Create model
 model = LinearRegression()
 
 # Train model
-model.fit(X_train, y_train)
+model.fit(X_train_scaled, y_train)
+
+predictions = model.predict(X_test_scaled)
 
 # See what the model learned
 coefficients = pd.DataFrame({
@@ -51,7 +58,7 @@ print("\nFeature Importance:")
 print(coefficients)
 
 # Make predictions
-predictions = model.predict(X_test)
+predictions = model.predict(X_test_scaled)
 
 
 # Evaluate model
