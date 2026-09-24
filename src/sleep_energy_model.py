@@ -1,13 +1,21 @@
 import pandas as pd
 import joblib
+from pathlib import Path
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+DATA_PATH = BASE_DIR / "data" / "sleep_energy_data.csv"
+
+MODEL_PATH = BASE_DIR / "models" / "energy_model.pkl"
+
+SCALER_PATH = BASE_DIR / "models" / "energy_scaler.pkl"
 
 # Load dataset
-df = pd.read_csv("sleep_energy_data.csv")
+df = pd.read_csv(DATA_PATH)
 
 # Features (X)
 X = df[
@@ -46,9 +54,10 @@ model = LinearRegression()
 model.fit(X_train_scaled, y_train)
 
 # Save trained model and scaler
-joblib.dump(model, "energy_model.pkl")
-joblib.dump(scaler, "energy_scaler.pkl")
-print("\nModel and scaler saved successfully!")
+joblib.dump(model, MODEL_PATH)
+joblib.dump(scaler, SCALER_PATH)
+print(f"\nModel saved to: {MODEL_PATH}")
+print(f"Scaler saved to: {SCALER_PATH}")
 
 
 predictions = model.predict(X_test_scaled)

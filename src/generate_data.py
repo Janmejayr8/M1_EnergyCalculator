@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from pathlib import Path
 
 np.random.seed(42)
 
@@ -33,8 +34,11 @@ df["energy_score"] = df["energy_score"].clip(0, 100)
 # Round values
 df = df.round(2)
 
-# Save dataset
-df.to_csv("sleep_energy_data.csv", index=False)
+BASE_DIR = Path(__file__).resolve().parent.parent
+DATA_PATH = BASE_DIR / "data" / "sleep_energy_data.csv"
+
+df.to_csv(DATA_PATH, index=False)
 
 print(df.head())
 print("\nDataset shape:", df.shape)
+print(f"Dataset saved to: {DATA_PATH}")

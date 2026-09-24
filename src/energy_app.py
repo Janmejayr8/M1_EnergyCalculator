@@ -1,11 +1,17 @@
 import tkinter as tk
 import pandas as pd
 import joblib
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+MODEL_PATH = BASE_DIR / "models" / "energy_model.pkl"
+SCALER_PATH = BASE_DIR / "models" / "energy_scaler.pkl"
 
 
 # Load model and scaler
-model = joblib.load("energy_model.pkl")
-scaler = joblib.load("energy_scaler.pkl")
+model = joblib.load(MODEL_PATH)
+scaler = joblib.load(SCALER_PATH)
 
 
 # -----------------------------
