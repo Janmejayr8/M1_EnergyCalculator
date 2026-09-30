@@ -4,7 +4,10 @@ from pathlib import Path
 
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
+from sklearn.dummy import DummyRegressor
 from sklearn.linear_model import LinearRegression
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
 
@@ -71,8 +74,27 @@ X_test_scaled = scaler.transform(X_test)
 # =========================
 
 model = LinearRegression()
-
+# This is the model currently used by the prediction app.
+final_model = model
 model.fit(X_train_scaled, y_train)
+
+# Random Forest model
+rf_model = RandomForestRegressor(
+    n_estimators=100,
+    random_state=42
+)
+
+rf_model.fit(X_train, y_train)
+
+gb_model = GradientBoostingRegressor(
+    n_estimators=100,
+    random_state=42
+)
+gb_model.fit(X_train, y_train)
+
+# Baseline model for comparison
+baseline_model = DummyRegressor(strategy="mean")
+baseline_model.fit(X_train, y_train)
 
 
 # =========================
@@ -81,6 +103,9 @@ model.fit(X_train_scaled, y_train)
 
 predictions = model.predict(X_test_scaled)
 
+rf_predictions = rf_model.predict(X_test)
+gb_predictions = gb_model.predict(X_test)
+baseline_predictions = baseline_model.predict(X_test)
 
 # =========================
 # Evaluate model
@@ -91,6 +116,34 @@ mse = mean_squared_error(y_test, predictions)
 rmse = mean_squared_error(y_test, predictions) ** 0.5
 r2 = r2_score(y_test, predictions)
 
+# Evaluate Random Forest
+rf_mae = mean_absolute_error(y_test, rf_predictions)
+rf_mse = mean_squared_error(y_test, rf_predictions)
+rf_rmse = mean_squared_error(y_test, rf_predictions) ** 0.5
+rf_r2 = r2_score(y_test, rf_predictions)
+
+# Evaluate Gradient Boosting
+gb_mae = mean_absolute_error(y_test, gb_predictions)
+gb_mse = mean_squared_error(y_test, gb_predictions)
+gb_rmse = mean_squared_error(y_test, gb_predictions) ** 0.5
+gb_r2 = r2_score(y_test, gb_predictions)
+
+# Evaluate Baseline
+baseline_mae = mean_absolute_error(y_test, baseline_predictions)
+baseline_mse = mean_squared_error(y_test, baseline_predictions)
+baseline_rmse = mean_squared_error(y_test, baseline_predictions) ** 0.5
+baseline_r2 = r2_score(y_test, baseline_predictions)
+
+comparison = pd.DataFrame({
+    "Model": ["Baseline", "Linear Regression", "Random Forest", "Gradient Boosting"],
+    "MAE": [baseline_mae, mae, rf_mae, gb_mae],
+    "MSE": [baseline_mse, mse, rf_mse, gb_mse],
+    "RMSE": [baseline_rmse, rmse, rf_rmse, gb_rmse],
+    "R²": [baseline_r2, r2, rf_r2, gb_r2]
+})
+
+print("\nModel Comparison:")
+print(comparison.round(2))
 
 # =========================
 # Feature coefficients
@@ -101,26 +154,15 @@ coefficients = pd.DataFrame({
     "Coefficient": model.coef_
 })
 
-print("\nFeature Importance:")
+print("\nLinear Regression Coefficients:")
 print(coefficients)
-
-
-# =========================
-# Evaluation results
-# =========================
-
-print("\nModel Evaluation:")
-print(f"Mean Absolute Error: {mae:.2f}")
-print(f"Mean Squared Error: {mse:.2f}")
-print(f"Root Mean Squared Error: {rmse:.2f}")
-print(f"R² Score: {r2:.2f}")
 
 
 # =========================
 # Save model and scaler
 # =========================
 
-joblib.dump(model, MODEL_PATH)
+joblib.dump(final_model, MODEL_PATH)
 joblib.dump(scaler, SCALER_PATH)
 
 print(f"\nModel saved to: {MODEL_PATH}")
