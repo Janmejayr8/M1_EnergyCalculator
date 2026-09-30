@@ -10,6 +10,8 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
+import matplotlib.pyplot as plt
+
 
 # =========================
 # File paths
@@ -144,6 +146,25 @@ comparison = pd.DataFrame({
 
 print("\nModel Comparison:")
 print(comparison.round(2))
+
+
+plt.figure(figsize=(8, 5))
+
+plt.scatter(y_test, predictions)
+
+plt.plot(
+    [y_test.min(), y_test.max()],
+    [y_test.min(), y_test.max()],
+    linestyle="--"
+)
+
+plt.xlabel("Actual Energy Score")
+plt.ylabel("Predicted Energy Score")
+plt.title("Actual vs Predicted Energy Scores")
+
+plt.savefig(BASE_DIR / "visual" / "actual_vs_predicted.png")
+
+plt.show()
 
 # =========================
 # Feature coefficients
